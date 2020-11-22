@@ -1,0 +1,1419 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+class ComplexHotelier
+{
+    const int idComplex;
+    char* numeComplex;
+    int nrHoteluri;
+    int nrNote;
+    float* note;
+    bool recomandat;
+
+public:
+
+    static void bunVenit()
+    {
+        cout << "Bine ati venit la noi\n";
+    }
+
+    ComplexHotelier():idComplex(0)
+    {
+        this -> numeComplex = new char[strlen("Necunoscut")+1];
+        strcpy(this -> numeComplex, "Necunoscut");
+
+        this -> nrHoteluri = 0;
+        this -> nrNote = 0;
+
+        this -> note = new float[0];
+        recomandat = false;
+    }
+
+    ComplexHotelier(int id):idComplex(id)
+    {
+        this -> numeComplex = new char[strlen("Necunoscut")+1];
+        strcpy(this -> numeComplex, "Necunoscut");
+
+        this -> nrHoteluri = 0;
+        this -> nrNote = 0;
+
+        this -> note = new float[0];
+        recomandat = false;
+    }
+
+    ComplexHotelier(int id, char* nume, int nrHoteluri, int nrNote, float* note, bool recomandat):idComplex(id)
+    {
+        this -> numeComplex = new char[strlen(nume)+1];
+        strcpy(numeComplex, nume);
+
+        this -> nrHoteluri = nrHoteluri;
+        this -> nrNote = nrNote;
+        this -> recomandat = recomandat;
+
+        this -> note = new float[nrNote];
+        for(int i = 0; i < nrNote; i++)
+            this -> note[i] = note[i];
+    }
+
+    ComplexHotelier(const ComplexHotelier &c):idComplex(c.idComplex)
+    {
+        this -> numeComplex = new char[strlen(c.numeComplex)+1];
+        strcpy(this -> numeComplex, c.numeComplex);
+
+        this -> nrHoteluri = c.nrHoteluri;
+        this -> nrNote = c.nrNote;
+        this -> recomandat = c.recomandat;
+
+        this -> note = new float[c.nrNote];
+        for(int i = 0; i < c.nrNote; i++)
+            this -> note[i] = c.note[i];
+    }
+
+    int getIdComplex()
+    {
+        return (int)this -> idComplex;
+    }
+
+    char* getNumeComplex()
+    {
+        return this -> numeComplex;
+    }
+
+    int getNrHoteluri()
+    {
+        return this -> nrHoteluri;
+    }
+
+    int getNrNote()
+    {
+        return this -> nrNote;
+    }
+
+    float* getNote()
+    {
+        return this -> note;
+    }
+
+    bool getRecomandat()
+    {
+        return this -> recomandat;
+    }
+
+    void setNumeComplex(char* a)
+    {
+        if(this -> numeComplex != NULL)
+            delete[] this -> numeComplex;
+
+        this -> numeComplex = new char[strlen(a)+1];
+        strcpy(this -> numeComplex, a);
+    }
+
+    void setNrHoteluri(int a)
+    {
+        this -> nrHoteluri = a;
+    }
+
+    void setRecomandat(bool a)
+    {
+        this -> recomandat = a;
+    }
+
+    void setNote(int a, float* b)
+    {
+        if(this -> note != NULL)
+            delete[] note;
+
+        this -> nrNote = a;
+        this -> note = new float[this -> nrNote];
+
+        for(int i = 0; i < a; i++)
+            this -> note[i] = b[i];
+    }
+
+    friend ostream &operator<< (ostream &out, const ComplexHotelier c)
+    {
+        out << "Complexul hotelier " << c.numeComplex;
+
+        if(c.nrNote>0)
+        {
+            out << " are " << c.nrNote << " note:";
+            for(int i = 0; i  < c.nrNote; i++)
+                out << " " << c.note[i];
+            out << " si ";
+
+            if(c.recomandat == true)
+                out << " este recomandat. ";
+            else
+                out << " nu este recomandat.";
+        }
+
+        else
+            out << " nu are note, deci nici recomandare. ";
+
+        if(c.nrHoteluri > 0)
+            out << " In plus detine " << c.nrHoteluri <<" hoteluri. ";
+
+        out << "\n";
+
+        return out;
+    }
+
+    friend istream &operator>> (istream &in, ComplexHotelier &c)
+    {
+        char aux[100];
+        cout << "Introdu numele Complexului: ";
+        if(c.numeComplex != NULL)
+            delete[] c.numeComplex;
+
+        in.get(aux, 100);
+        in.get();
+
+        c.numeComplex = new char[strlen(aux)+1];
+        strcpy(c.numeComplex, aux);
+
+        cout << "\nIntrodu nr hotleuri: ";
+        in >> c.nrHoteluri;
+
+        cout << "\nIntrodu nr note: ";
+        in >> c.nrNote;
+
+        cout << "\nIntrodu notele: ";
+        if(c.note != NULL)
+            delete[] c.note;
+        c.note = new float[c.nrNote];
+        for(int i = 0; i< c.nrNote; i++)
+            in >> c.note[i];
+
+        cout << "\nIntrodu recomandare(1= da,0 =nu): ";
+        in >> c.recomandat;
+
+        return in;
+
+    }
+
+    ComplexHotelier &operator= (const ComplexHotelier &c)
+    {
+        if(this != &c)
+        {
+            if(this -> numeComplex != NULL)
+                delete[] this -> numeComplex;
+
+            this -> numeComplex = new char[strlen(c.numeComplex)+1];
+            strcpy(this -> numeComplex, c.numeComplex);
+
+            this -> nrHoteluri = c.nrHoteluri;
+            this -> nrNote = c.nrNote;
+            this -> recomandat = c.recomandat;
+
+            if(this -> note != NULL)
+                delete[] this -> note;
+
+            this -> note = new float[c.nrNote];
+            for(int i = 0; i < c.nrNote; i++)
+                this -> note[i] = c.note[i];
+        }
+
+        return *this;
+    }
+
+    friend bool operator== (const ComplexHotelier &a, const ComplexHotelier &b)
+    {
+        if(a.idComplex == b.idComplex && strcmp(a.numeComplex, b.numeComplex) == 0 && a.nrHoteluri == b.nrHoteluri)
+            return true;
+        else
+            return false;
+    }
+
+    friend bool operator<= (const ComplexHotelier &a, const ComplexHotelier &b)
+    {
+        if(a.idComplex <= b.idComplex && a.nrHoteluri <= b.nrHoteluri)
+            return true;
+        else
+            return false;
+    }
+
+    friend bool operator< (const ComplexHotelier &a, const ComplexHotelier &b)
+    {
+        if(a.idComplex < b.idComplex && a.nrHoteluri < b.nrHoteluri)
+            return true;
+        else
+            return false;
+    }
+    friend bool operator> (const ComplexHotelier &a, const ComplexHotelier &b)
+    {
+        if(a.idComplex > b.idComplex && a.nrHoteluri > b.nrHoteluri)
+            return true;
+        else
+            return false;
+    }
+
+    friend bool operator>= (const ComplexHotelier &a, const ComplexHotelier &b)
+    {
+        if(a.idComplex >= b.idComplex && a.nrHoteluri >= b.nrHoteluri)
+            return true;
+        else
+            return false;
+    }
+
+    ComplexHotelier &operator+ (float i)
+    {
+        int aux = this -> nrNote;
+
+        float* a;
+
+        a = new float[aux];
+        for(int j = 0; j < aux; j++)
+            a[j] = this -> note[j];
+
+        delete[] this -> note;
+
+        aux++;
+        this -> note = new float[aux];
+        for(int j = 0; j < this -> nrNote; j++)
+            this -> note[j] = a[j];
+
+        this -> note[aux-1] = i;
+        this -> nrNote = aux;
+        delete[] a;
+
+        return *this;
+    }
+
+    const ComplexHotelier operator++ ()
+    {
+        this -> nrHoteluri ++;
+
+        return *this;
+    }
+
+    const ComplexHotelier operator-- ()
+    {
+        this -> nrHoteluri --;
+
+        return *this;
+    }
+
+    const ComplexHotelier operator++ (int)
+    {
+        ComplexHotelier aux(*this);
+        this -> nrHoteluri ++;
+
+        return aux;
+    }
+
+    const ComplexHotelier operator-- (int)
+    {
+        ComplexHotelier aux(*this);
+        this -> nrHoteluri --;
+
+        return aux;
+    }
+
+    float operator[] (int i)
+    {
+        i--;
+
+        if(i >= 0 and i< this -> nrNote)
+            return this -> note[i];
+
+        else
+            return -1;
+    }
+
+    explicit operator int()
+    {
+        return (int) this -> nrHoteluri;
+    }
+
+    ~ComplexHotelier()
+    {
+        if(this -> numeComplex != NULL)
+            delete[] this -> numeComplex;
+        if(this -> note != NULL)
+                delete[] this -> note;
+    }
+};
+
+class Hotel
+{
+    const int idHotel;
+    char* numeHotel;
+    int idComplex;
+    bool reconditionat;
+    float value;
+    int levels;
+    int* roomsOnLevel;
+    string locatie;
+
+public:
+
+    static void hello()
+    {
+        cout << " Bun venit la hotelul nostru, speram sa va placa";
+    }
+
+    virtual void terasa()
+    {
+        cout << "Acest hotel nu are terasa";
+    }
+
+    Hotel():idHotel(0)
+    {
+        numeHotel = new char[strlen("unknown")+1];
+        strcpy(numeHotel, "unknown");
+
+        idComplex = 0;
+        reconditionat = false;
+        value = 0;
+        levels = 0;
+        roomsOnLevel = new int[0];
+        locatie ="unknown";
+    }
+
+    Hotel(int id, char* nume, ComplexHotelier c, bool recond, float val, int levels, int* rooms, string loc):idHotel(id)
+    {
+        numeHotel = new char[strlen(nume)+1];
+        strcpy(numeHotel, nume);
+
+        idComplex = c.getIdComplex();
+        reconditionat = recond;
+        value = val;
+        this -> levels = levels;
+
+        roomsOnLevel = new int[levels];
+        for(int i = 0; i<levels; i++)
+            roomsOnLevel[i] =rooms[i];
+
+        locatie = loc;
+    }
+
+    Hotel(const Hotel &h): idHotel(h.idHotel)
+    {
+        this ->numeHotel = new char[strlen(h.numeHotel)+1];
+        strcpy(this ->numeHotel, h.numeHotel);
+
+        this -> idComplex = h.idComplex;
+        this ->reconditionat = h.reconditionat;
+        this -> value = h.value;
+        this -> levels = h.levels;
+
+        this ->roomsOnLevel = new int[h.levels];
+        for(int i = 0; i<h.levels; i++)
+            this -> roomsOnLevel[i] =h.roomsOnLevel[i];
+
+        this -> locatie = h.locatie;
+    }
+
+    int getLevels()
+    {
+        return this -> levels;
+    }
+
+    int* getRoomsOnLevel()
+    {
+        return this -> roomsOnLevel;
+    }
+
+    char* getNumeHotel()
+    {
+        return this -> numeHotel;
+    }
+
+    string getLocatie()
+    {
+        return this -> locatie;
+    }
+
+    bool getReconditionat()
+    {
+        return this -> reconditionat;
+    }
+
+    float getValue()
+    {
+        return this -> value;
+    }
+
+    int getIdComplex()
+    {
+        return this -> idComplex;
+    }
+
+    int getIdHotel()
+    {
+        return (int) this ->idHotel;
+    }
+
+    void setNumeHotel(char* a)
+    {
+        if(this -> numeHotel != NULL)
+            delete[] this -> numeHotel;
+
+        this -> numeHotel = new char[strlen(a)+1];
+        strcpy(this -> numeHotel, a);
+    }
+
+    void setRoomsandLevels(int a, int* b)
+    {
+        if(this -> roomsOnLevel != NULL)
+            delete[] this -> roomsOnLevel;
+
+        this -> levels = a;
+        this -> roomsOnLevel = new int[this -> levels];
+
+        for(int i = 0; i < a; i++)
+            this -> roomsOnLevel[i] = b[i];
+
+    }
+
+    void setLocatie(string a)
+    {
+        this -> locatie = a;
+    }
+
+    void setIdComplex(int id)
+    {
+        this -> idComplex = id;
+    }
+
+    void setReconditionat(bool a)
+    {
+        this -> reconditionat = a;
+    }
+
+    Hotel &operator= (const Hotel &h)
+    {
+     if(this != &h)
+     {
+        if(this -> numeHotel != NULL)
+            delete[] this -> numeHotel;
+
+        this ->numeHotel = new char[strlen(h.numeHotel)+1];
+        strcpy(this ->numeHotel, h.numeHotel);
+
+        this -> idComplex = h.idComplex;
+        this ->reconditionat = h.reconditionat;
+        this -> value = h.value;
+        this -> levels = h.levels;
+
+        if(this -> roomsOnLevel != NULL)
+            delete[] this -> roomsOnLevel;
+
+        this -> roomsOnLevel = new int[h.levels];
+        for(int i = 0; i<h.levels; i++)
+            this -> roomsOnLevel[i] =h.roomsOnLevel[i];
+
+        this -> locatie = h.locatie;
+     }
+
+     return *this;
+    }
+
+    friend ostream &operator<< (ostream &out, const Hotel h)
+    {
+        out << "Hotelul " << h.numeHotel << " al complexului cu id: " << h.idComplex;
+        if(h.levels>0)
+        {
+            out << " are " << h.levels << " etaje fiecare avand urm nr de camere:";
+
+            for(int i = 0; i<h.levels; i++)
+                out << " " << h.roomsOnLevel[i];
+        }
+
+        else
+            out << "nu are etaje";
+
+        out<<"\nAcesta ";
+        if(h.reconditionat == true)
+            out << "a fost reconditionat";
+        else
+            out << "nu  a fost recond ";
+
+        out << ". Se afla la " << h.locatie << " si are o valoare de " << h.value << "$.";
+        out<< "\n";
+
+        return out;
+    }
+
+    friend istream &operator>> (istream &in, Hotel &h)
+    {
+        cout << "\nIntrodu Numele hotelului: ";
+        char aux[100];
+
+        in.get(aux, 100);
+        in.get();
+
+        if(h.numeHotel != NULL)
+            delete[] h.numeHotel;
+
+        h.numeHotel = new char[strlen(aux)];
+        strcpy(h.numeHotel, aux);
+
+        cout << "\nIntrodu id-ul complexului: ";
+        in >> h.idComplex;
+
+        cout << "\nIntrodu valoarea: ";
+        in >> h.value;
+
+        cout << "\nA fost reconditionat(1=da, 0=nu): ";
+        in >> h.reconditionat;
+
+        cout <<"\nIntrodu nr etaje: ";
+        in >> h.levels;
+
+        if(h.roomsOnLevel != NULL)
+            delete[] h.roomsOnLevel;
+        h.roomsOnLevel = new int(h.levels);
+
+        cout << "\nIntrodu nr de camere pe fiecare etaj: ";
+        for(int i = 0; i < h.levels; i++)
+            in >> h.roomsOnLevel[i];
+
+        cout << "\nIntrodu locatie(mare, munte): ";
+        in >> h.locatie;
+
+        return in;
+
+    }
+
+    friend bool operator== (const Hotel &a, const Hotel &b)
+    {
+        if(strcmp(a.numeHotel, b.numeHotel)== 0 && a.value == b.value && a.idHotel == b.idHotel)
+            return true;
+        else
+            return false;
+    }
+    friend bool operator<= (const Hotel &a, const Hotel &b)
+    {
+        if(a.value <= b.value)
+            return true;
+        else
+            return false;
+    }
+
+    friend bool operator< (const Hotel &a, const Hotel &b)
+    {
+        if(a.value < b.value)
+            return true;
+        else
+            return false;
+    }
+
+    friend bool operator> (const Hotel &a, const Hotel &b)
+    {
+        if(a.value > b.value)
+            return true;
+        else
+            return false;
+    }
+
+    friend bool operator>= (const Hotel &a, const Hotel &b)
+    {
+        if(a.value >= b.value)
+            return true;
+        else
+            return false;
+    }
+
+    const Hotel operator++ ()
+    {
+        this -> value = this -> value + 1;
+
+        return *this;
+    }
+
+    const Hotel operator-- ()
+    {
+        this -> value = this -> value - 1;
+
+        return *this;
+    }
+
+    const Hotel operator++ (int)
+    {
+        Hotel aux(*this);
+        this -> value = this -> value + 1;
+
+        return aux;
+    }
+
+    const Hotel operator-- (int)
+    {
+        Hotel aux(*this);
+        this -> value = this -> value -1;
+
+        return aux;
+    }
+
+    Hotel &operator+ (int i)
+    {
+        int aux = this -> levels;
+
+        int* a;
+
+        a = new int[aux];
+        for(int j = 0; j < aux; j++)
+            a[j] = this -> roomsOnLevel[j];
+
+        delete[] this -> roomsOnLevel;
+
+        aux++;
+        this -> roomsOnLevel = new int[aux];
+        for(int j = 0; j < this -> levels; j++)
+            this -> roomsOnLevel[j] = a[j];
+
+        this -> roomsOnLevel[aux-1] = i;
+        this -> levels = aux;
+        delete[] a;
+
+        return *this;
+    }
+
+    float operator[] (int i)
+    {
+        i--;
+
+        if(i >= 0 and i< this -> levels)
+            return this -> roomsOnLevel[i];
+
+        else
+            return -1;
+    }
+
+    explicit operator int()
+    {
+        return (int) this -> value;
+    }
+
+    ~Hotel()
+    {
+        if(this -> numeHotel != NULL)
+            delete[] this -> numeHotel;
+
+        if(this -> roomsOnLevel != NULL)
+            delete[] this -> roomsOnLevel;
+    }
+
+};
+
+class Worker
+{
+    const int IdWorker;
+    char* workerName;
+    int age;
+    int gradesNum;
+    int* grades;
+    float salary;
+    int idHotel;
+    char gender;
+
+public:
+    static void msj()
+    {
+        cout << "Bun venit la noul tau loc de munca!\n";
+    }
+
+    Worker():IdWorker(0)
+    {
+        workerName = new char[strlen("Unknown")+1];
+        strcpy(workerName, "Unknown");
+
+        age = 0;
+        gradesNum = 0;
+        grades = new int[gradesNum];
+        salary = 0;
+        idHotel = 0;
+        gender = 'N';
+
+    }
+
+
+    Worker(int id, char* name, int age, char gen, int nrNote, int* note, float salariu, Hotel &h): IdWorker(id)
+    {
+        workerName = new char[strlen(name)+1];
+        strcpy(workerName, name);
+
+        this -> age = age;
+        gender = gen;
+        gradesNum = nrNote;
+
+        grades = new int[gradesNum];
+        for(int i = 0; i < gradesNum; i++)
+            grades[i] =note[i];
+
+        salary = salariu;
+        this -> idHotel = h.getIdHotel();
+    }
+
+    Worker(const Worker &w): IdWorker(w.IdWorker)
+    {
+        workerName = new char[strlen(w.workerName)+1];
+        strcpy(workerName, w.workerName);
+
+        this -> age = w.age;
+        this -> gender = w.gender;
+        this ->gradesNum = w.gradesNum;
+
+        this -> grades = new int[this -> gradesNum];
+        for(int i = 0; i < gradesNum; i++)
+            this ->grades[i] =w.grades[i];
+
+        this ->salary = w.salary;
+        this -> idHotel = w.idHotel;
+
+    }
+
+    friend ostream &operator<< (ostream &out, const Worker a)
+    {
+        if (a.gender == 'F')
+            out << "Angajata ";
+        else
+            out << "Angajatul ";
+
+        out << a.workerName<< " are " << a.age << " ani si lucreaza la hotelul cu id:" << a.idHotel;
+        out << "*.\nAre un salariu de " << a.salary << "$. De la angajare a obtinut " << a.gradesNum;
+        out <<" note:";
+
+        for(int i = 0; i < a.gradesNum; i++)
+            out <<" "<< a.grades[i];
+
+        out << "\n";
+
+        return out;
+    }
+
+    friend istream &operator>> (istream &in, Worker &a)
+    {
+        char aux[100];
+
+        cout << "Introdu numele angajatului: ";
+
+        in.get(aux, 100);
+        in.get();
+
+        if(a.workerName != NULL)
+            delete[] a.workerName;
+
+        a.workerName = new char[strlen(aux)+1];
+        strcpy(a.workerName, aux);
+
+        cout << "\nIntrodu varsta: ";
+        in >> a.age;
+
+        cout << "\nIntrodu genul: ";
+        in >> a.gender;
+
+        cout << "\nIntrodu salariul: ";
+        in >> a.salary;
+
+        cout << "\nIntrodu nr de note: ";
+        in >> a.gradesNum;
+
+        cout << "\nIntrodu notele: ";
+        if(a.grades != NULL)
+            delete[] a.grades;
+        a.grades = new int[a.gradesNum];
+        for(int i = 0; i< a.gradesNum; i++)
+            in >> a.grades[i];
+
+        cout << "\nIntrodu ID hotel: ";
+        in >> a.idHotel;
+
+        cout << "\n-----------------Inregistrat cu succes---------------------";
+        cout << "\n\n";
+
+        return in;
+    }
+
+    Worker &operator= (const Worker &w)
+    {
+        if(this != &w)
+        {
+            if(this -> workerName != NULL)
+                delete[] this -> workerName;
+
+            this ->workerName = new char[strlen(w.workerName)+1];
+            strcpy(this -> workerName, w.workerName);
+
+            this -> age = w.age;
+            this -> gender = w.gender;
+            this ->gradesNum = w.gradesNum;
+
+            if(this -> grades != NULL)
+                delete[] this -> grades;
+
+            this -> grades = new int[this -> gradesNum];
+
+            for(int i = 0; i < gradesNum; i++)
+                this ->grades[i] =w.grades[i];
+
+            this ->salary = w.salary;
+            this -> idHotel = w.idHotel;
+        }
+
+        return *this;
+
+    }
+
+    friend bool operator== (const Worker &a, const Worker &b)
+    {
+        if(strcmp(a.workerName,b.workerName) == 0 and a.age == b.age and a.idHotel == b.idHotel)
+            return true;
+        else
+            return false;
+    }
+
+    friend bool operator< (const Worker &a, const Worker &b)
+    {
+        if(a.age < b.age)
+            return true;
+        else
+            return false;
+    }
+
+    friend bool operator<= (const Worker &a, const Worker &b)
+    {
+        if(a.age <= b.age)
+            return true;
+        else
+            return false;
+    }
+
+    friend bool operator> (const Worker &a, const Worker &b)
+    {
+        if(a.age > b.age)
+            return true;
+        else
+            return false;
+    }
+
+    friend bool operator>= (const Worker &a, const Worker &b)
+    {
+        if(a.age >= b.age)
+            return true;
+        else
+            return false;
+    }
+
+    Worker &operator+ (float i)
+    {
+        salary = salary + i;
+        return *this;
+    }
+
+    Worker &operator- (float i)
+    {
+        salary = salary - i;
+
+        return *this;
+    }
+
+    const Worker &operator++()
+    {
+        age++;
+
+        return *this;
+    }
+
+    const Worker operator++ (int)
+    {
+        Worker aux(*this);
+
+        age++;
+
+        return aux;
+    }
+
+    const Worker &operator--()
+    {
+        age--;
+
+        return *this;
+    }
+
+    const Worker operator-- (int)
+    {
+        Worker aux(*this);
+
+        age--;
+
+        return aux;
+    }
+
+    int operator[] (int i)
+    {
+        if(i >= 0 and i < this -> gradesNum)
+            return grades[i];
+
+        else
+            return -1;
+    }
+
+    explicit operator int()
+    {
+        return (int) salary;
+    }
+
+    ~Worker()
+    {
+        if(workerName != NULL)
+            delete[] workerName;
+
+        if(grades != NULL)
+            delete[] grades;
+
+    }
+};
+
+class Client
+{
+    const int idClient;
+    char* numeClient;
+    int varsta;
+    float notaAcordata;
+    bool clientFidel;
+    char gender;
+
+public:
+    static void msj()
+    {
+        cout << "---------Bine ai venit la cazare-------\n";
+    }
+
+    Client():idClient(0)
+    {
+        this -> numeClient = new char[strlen("Unknown")+1];
+        strcpy(this -> numeClient, "Unknown");
+
+        this -> varsta = 0;
+        this -> notaAcordata = 0;
+        this -> gender = 'N';
+        this -> clientFidel = false;
+    }
+
+
+    Client(int id, char* numeClient, int varsta, char gen, float nota, bool fidel):idClient(id)
+    {
+        this -> numeClient = new char[strlen(numeClient)+1];
+        strcpy(this -> numeClient, numeClient);
+
+        this -> varsta = varsta;
+        this -> gender  = gen;
+        this -> notaAcordata = nota;
+
+        this -> clientFidel = fidel;
+    }
+
+    Client(const Client &c):idClient(c.idClient)
+    {
+        this -> numeClient = new char[strlen(c.numeClient)+1];
+        strcpy(this -> numeClient, c.numeClient);
+
+        this -> varsta = c.varsta;
+        this -> gender  = c.gender;
+        this -> notaAcordata = c.notaAcordata;
+        this -> clientFidel = c.clientFidel;
+    }
+
+    friend ostream &operator<< (ostream &out, const Client &c)
+    {
+        if(c.gender == 'F')
+            out << "Clienta ";
+        else
+            out << "Clientul ";
+
+        out << c.numeClient << " are " << c.varsta << ", iar ID-ul este:" << c.idClient;
+
+        if (c.clientFidel == true)
+            out << "\nA mai fost in trecut la acest hotel. ";
+
+        else
+            out <<"\nNu a mai fost in trecut la acest hotel. ";
+
+        out << "In urma serviciilor oferite, nota acordata este: " << c.notaAcordata;
+        out << "\n";
+
+        return out;
+    }
+
+    friend istream &operator>> (istream &in, Client &c)
+    {
+        cout << "Introdu numele clientului/ei: ";
+
+        char aux[100];
+
+        in.get(aux,100);
+        in.get();
+
+        if(c.numeClient != NULL)
+            delete[] c.numeClient;
+
+        c.numeClient = new char[strlen(aux)+1];
+        strcpy(c.numeClient, aux);
+
+        cout << "\nIntrodu varsta: ";
+
+        in >> c.varsta;
+
+        cout << "\nIntrodu genul(M/F): ";
+
+        in >> c.gender;
+
+        cout << "\nIntrodu nota acordata: ";
+        in >> c.notaAcordata;
+
+       cout << "\nA mai fost la acest hotel?(1=da, 0=nu): ";
+        in >> c.clientFidel;
+
+        return in;
+
+    }
+
+    Client &operator= (const Client &c)
+    {
+        if(this != &c)
+        {
+            if(numeClient != NULL)
+                delete[] numeClient;
+
+            numeClient = new char[strlen(c.numeClient)+1];
+            strcpy(numeClient, c.numeClient);
+
+            varsta = c.varsta;
+            gender = c.gender;
+            notaAcordata = c.notaAcordata;
+            clientFidel = c.clientFidel;
+        }
+
+        return *this;
+    }
+
+    friend bool operator== (const Client &a, const Client &b)
+    {
+        if (a.varsta == b.varsta && strcmp(a.numeClient, b.numeClient) == 0)
+            return true;
+        else
+            return false;
+    }
+
+    friend bool operator< (const Client &a, const Client &b)
+    {
+        if (a.varsta < b.varsta)
+            return true;
+        else
+            return false;
+    }
+
+    friend bool operator<= (const Client &a, const Client &b)
+    {
+        if (a.varsta <= b.varsta)
+            return true;
+        else
+            return false;
+    }
+
+    friend bool operator> (const Client &a, const Client &b)
+    {
+        if (a.varsta > b.varsta)
+            return true;
+        else
+            return false;
+    }
+
+    friend bool operator>= (const Client &a, const Client &b)
+    {
+        if (a.varsta >= b.varsta)
+            return true;
+        else
+            return false;
+    }
+
+    Client &operator+ (float i)
+    {
+        notaAcordata = (notaAcordata+i)/2;
+
+        return *this;
+    }
+
+    const Client operator++ ()
+    {
+        this -> varsta++;
+
+        return *this;
+    }
+
+     const Client operator-- ()
+    {
+        this -> varsta--;
+
+        return *this;
+    }
+
+    const Client operator++ (int)
+    {
+        Client aux(*this);
+        this -> varsta++;
+
+        return aux;
+    }
+
+    const Client operator-- (int)
+    {
+        Client aux(*this);
+        this -> varsta--;
+
+        return aux;
+    }
+
+    explicit operator int()
+    {
+        return (int) this -> notaAcordata;
+    }
+
+    ~Client()
+    {
+        if(this -> numeClient != NULL)
+            delete[] this -> numeClient;
+    }
+};
+
+class Oferta
+{
+    Client client;
+    Hotel hotel;
+public:
+
+    Oferta()
+    {
+
+    }
+
+    Oferta(Client c, Hotel h)
+    {
+        client = c;
+        hotel = h;
+    }
+
+    Oferta(const Oferta &o)
+    {
+        if(this != &o)
+        {
+            client = o.client;
+            hotel = o.hotel;
+        }
+    }
+
+    Oferta &operator= (const Oferta &o)
+    {
+        if(this != &o)
+        {
+            client = o.client;
+            hotel = o.hotel;
+        }
+        return *this;
+    }
+
+    friend ostream &operator<< (ostream &out, const Oferta &o)
+    {
+        out << "Detalii oferta: \n";
+        out << o.client << "\nDetalii hotel:\n"<< o.hotel<< "\n";
+
+        return out;
+    }
+
+    ~Oferta()
+    {
+
+    }
+};
+
+class Manager: public Worker
+{
+    float oreBonus;
+
+public:
+
+    Manager()
+    {
+        oreBonus = 0;
+    }
+    Manager(Worker a, float ore): Worker(a)
+    {
+        oreBonus = ore;
+    }
+
+    Manager(const Manager &m): Worker(m)
+    {
+        oreBonus = m.oreBonus;
+    }
+
+    Manager &operator= (const Manager &m)
+    {
+        if(this != &m)
+        {
+            Manager(*this) = (Manager&) m;
+            this -> oreBonus = m.oreBonus;
+        }
+        return *this;
+    }
+
+    friend ostream &operator<< (ostream &out, Manager &m)
+    {
+        out << (Worker&) m;
+
+        out << "Acesta a facut " << m.oreBonus << " ore in plus\n";
+
+        return out;
+
+    }
+
+    friend istream &operator>> (istream &in, Manager &m)
+    {
+        in >> (Worker&) m;
+
+        cout << "Introdu orele bonus: ";
+
+        in >> m.oreBonus;
+
+        return in;
+    }
+
+    ~Manager()
+    {
+
+    }
+
+};
+
+class HotelCuTerasa: public Hotel
+{
+    int numarMese;
+
+public:
+
+    void terasa()
+    {
+        cout << "Acest hotel nu are terasa";
+    }
+
+    HotelCuTerasa()
+    {
+        numarMese = 0;
+    }
+
+    HotelCuTerasa(Hotel h, int nr): Hotel(h)
+    {
+        numarMese = nr;
+    }
+
+    HotelCuTerasa(const HotelCuTerasa &ht): Hotel(ht)
+    {
+        numarMese = ht.numarMese;
+    }
+
+    HotelCuTerasa &operator= (const HotelCuTerasa &ht)
+    {
+        if(this != &ht)
+        {
+            HotelCuTerasa(*this) = (HotelCuTerasa&) ht;
+            numarMese = ht.numarMese;
+        }
+
+        return *this;
+    }
+
+    friend ostream &operator<< (ostream  &out, HotelCuTerasa &ht)
+    {
+        out << (Hotel&) ht;
+
+        out << "Acesta are un restaurnat cu: " << ht.numarMese << "\n";
+
+        return out;
+    }
+
+    ~HotelCuTerasa()
+    {
+
+    }
+
+};
+
+
+int main()
+{
+
+    cout << "---------Creez 2 complexeHoteliere(ch1,ch2) si le afisez---------";
+
+    char ch[]="Complex Star";
+    float n[] = {8,9};
+    ComplexHotelier ch1,ch2(1,ch,10,2,n,true);
+
+    cout << "\nc1 creat prin constructor fara parametri:\n" << ch1;
+    cout << "\n\nc2 creat cu parametri:\n" << ch2 << "\n\n";
+
+    cout << "----------Fac citire si afisare pentru ch1-------------\n";
+    //cin >> ch1;
+    cout << ch1;
+    cout << "\n\n--------- Verific daca ch1== ch2 apoi adaug nota prin operatorul + -----\n";
+    if(ch1 == ch2)
+        cout << "Este acelasi complex.\n";
+    else
+        cout << "Este alt complex.\n";
+
+    ch1 = ch1+9;
+    cout << ch1;
+
+    cout << "\n\n-------------------Creez 2 hoteluri si le afisez-----------\n";
+    char hn[]= "Tristar";
+    int rooms[] = {44,22};
+    Hotel h1, h2(12,hn,ch2,false,43454,2,rooms,"mare");
+
+    cout << "Hotelul h1 fara parametri:\n"<< h1 << "\nHotelul h2 cu parametri:\n" << h2;
+
+    cout << "\n\n--------------Citesc date pt h1 si afisez---------\n";
+    cin >> h1;
+    cout<< "\n" << h1;
+
+    cout << "----Verific daca h1 are o val mai mica decat h2 h1<h2-----\n";
+    if(h1<h2)
+        cout << "h1 < h2";
+    else
+        cout << "h1 >= h2";
+    cout << "\n\n-------------------Creez 2 angajati w1 si w2----------\n";
+
+    char name[] ="Dan";
+    int note[] = {4,5};
+
+    Worker w1, w2(22,name,44,'M',2,note,3432,h2);
+
+    cout << "Afizez w1 si w2\n";
+    cout << w1 << "\n" << w2 << "\n Citesc date pt w1 si afisez\n";
+    cin >> w1;
+    cout << "\n" << w1 << "\n";
+
+    cout << "---------- Creez 2 clienti si ii afizez c1 si c2 -------------\n";
+
+    Client c1, c2(23,name,67,'M',6.5,true);
+
+    cout << c1 << "\n" << c2 << "\n----Voi citi date pt c1-----\n";
+    cin >> c1;
+    cout << c1 << "\n---- Voi creste varsta clientului prin ++ si voi adauga o not cu care se va face media prin +\n";
+
+    cout<< "++\n";
+    c2++;
+    cout << c2 <<"+\n";
+
+    c2 = c2 + 4.5;
+
+    cout << c2;
+
+    cout << "\n\n------------Done------------";
+
+
+
+
+
+    return 0;
+}
