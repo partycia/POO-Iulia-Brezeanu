@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1607278314 source:d:\fmi unibuc\coding\an2\poo\agentie_hoteliera\main.cpp
+	<iostream>
+	<string.h>
+	<vector>
+	<fstream>
+
